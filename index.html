@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Snow</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        let canvas;
+        let ctx;
+        let stars;
+        let numStars = 200;
+        let tilt = 0
+
+        window.onload = function () {
+            canvas = document.getElementById("canvas");
+            ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener("deviceorientation", handleDeviceTilt, true);
+            } else {
+                console.log("Sorry, your browser doesn't support Device Orientation");
+            }
+
+
+
+
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3,
+                    speed: Math.random()
+                });
+            }
+
+            draw();
+        }
+
+        function handleDeviceTilt(event) {
+            {
+                // gamma: left to right
+                var leftToRightDegrees = event.gamma.toFixed(2);
+
+                tilt = ((leftToRightDegrees - -90) / (90 - -90) * 2 - 1) * 1.5
+
+            }
+
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#000044';
+
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ffffff";
+
+            for (let i = 0; i < numStars; i++) {
+                let star = stars[i];
+
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI)
+                ctx.fill();
+
+                star.y += star.speed;
+                star.x += tilt;
+
+                if (star.x < 0) {
+                    star.x = canvas.width;
+                } else if (star.x > canvas.width) {
+                    star.x = 0;
+                } else if (star.y > canvas.height) {
+                    star.y = 0 - star.size;
+                    star.x = Math.random() * canvas.width;
+                }
+            }
+
+            requestAnimationFrame(draw);
+        }
+    </script>
+</body>
+
+</html>
