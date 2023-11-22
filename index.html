@@ -20,9 +20,12 @@
     <script>
         let canvas;
         let ctx;
-        let stars;
-        let numStars = 200;
-        let tilt = 0
+        let snowflakes;
+        let numsnowflakes = 200;
+        let tilt = 0;
+        let mouseX = 0;
+        let mouseY = 0;
+
 
         window.onload = function () {
             canvas = document.getElementById("canvas");
@@ -32,17 +35,18 @@
 
             if (window.DeviceOrientationEvent) {
                 window.addEventListener("deviceorientation", handleDeviceTilt, true);
-            } else {
-                console.log("Sorry, your browser doesn't support Device Orientation");
             }
 
+            document.addEventListener("mousemove", function (event) {
+                console.log("mouse!")
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
 
-
-
-            stars = [];
-            for (let i = 0; i < numStars; i++) {
+            snowflakes = [];
+            for (let i = 0; i < numsnowflakes; i++) {
                 let size = Math.random() * 3;
-                stars.push({
+                snowflakes.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
                     size: size,
@@ -65,27 +69,41 @@
         }
 
         function draw() {
+
             ctx.fillStyle = '#000044';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ffffff";
 
-            for (let i = 0; i < numStars; i++) {
-                let star = stars[i];
+            for (let i = 0; i < numsnowflakes; i++) {
+                let snowflake = snowflakes[i];
+
+
+                let dx = snowflake.x - mouseX;
+                let dy = snowflake.y - mouseY;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+
+                console.log(dx);
+
+                if (dist < 100) { // 100 is the distance at which snowflakes snowflaket to move away from cursor
+                    snowflake.x += dx / dist;
+                }
+
 
                 ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI)
+                ctx.arc(snowflake.x, snowflake.y, snowflake.size, 0, 2 * Math.PI)
                 ctx.fill();
 
-                star.y += star.speed;
-                star.x += tilt;
 
-                if (star.x < 0) {
-                    star.x = canvas.width;
-                } else if (star.x > canvas.width) {
-                    star.x = 0;
-                } else if (star.y > canvas.height) {
-                    star.y = 0 - star.size;
-                    star.x = Math.random() * canvas.width;
+                snowflake.y += snowflake.speed;
+                snowflake.x += tilt;
+
+                if (snowflake.x < 0) {
+                    snowflake.x = canvas.width;
+                } else if (snowflake.x > canvas.width) {
+                    snowflake.x = 0;
+                } else if (snowflake.y > canvas.height) {
+                    snowflake.y = 0 - snowflake.size;
+                    snowflake.x = Math.random() * canvas.width;
                 }
             }
 
