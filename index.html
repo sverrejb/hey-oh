@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Snow</title>
+    <title>Hey-oh</title>
     <style>
         body,
         html {
@@ -36,14 +36,15 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            if (window.DeviceOrientationEvent) {
-                window.addEventListener("deviceorientation", handleDeviceTilt, true);
-            }
+            window.addEventListener("deviceorientation", handleDeviceTilt, true);
+            window.addEventListener('resize', resizeCanvas);
 
-            document.addEventListener("mousemove", function (event) {
+            window.addEventListener("mousemove", function (event) {
                 mouseX = event.clientX;
                 mouseY = event.clientY;
             });
+
+
 
             snowflakes = [];
             for (let i = 0; i < numsnowflakes; i++) {
@@ -60,12 +61,13 @@
         }
 
         function handleDeviceTilt(event) {
-            {
-                // gamma: left to right
-                var leftToRightDegrees = event.gamma.toFixed(2);
-                tilt = ((leftToRightDegrees - -90) / (90 + 90) * 2 - 1) * 1.5
-            }
+            var leftToRightDegrees = event.gamma.toFixed(2);
+            tilt = ((leftToRightDegrees - -90) / (90 + 90) * 2 - 1) * 1.5
+        }
 
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
 
         function draw() {
@@ -88,8 +90,6 @@
                     snowflake.x += dx / (dist * 5);
                     snowflake.y += dy / (dist * 5);
                 }
-
-
 
                 ctx.beginPath();
                 ctx.arc(snowflake.x, snowflake.y, snowflake.size, 0, 2 * Math.PI)
