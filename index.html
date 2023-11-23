@@ -26,8 +26,8 @@
         let snowflakes;
         let numsnowflakes = 200;
         let tilt = 0;
-        let mouseX = 0;
-        let mouseY = 0;
+        let mouseX;
+        let mouseY;
 
 
         window.onload = function () {
@@ -63,9 +63,7 @@
             {
                 // gamma: left to right
                 var leftToRightDegrees = event.gamma.toFixed(2);
-
                 tilt = ((leftToRightDegrees - -90) / (90 + 90) * 2 - 1) * 1.5
-
             }
 
         }
